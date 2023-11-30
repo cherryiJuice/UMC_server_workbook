@@ -9,6 +9,8 @@ import com.example.umc_practice.domain.mapping.MemberMission;
 import com.example.umc_practice.domain.mapping.MemberPrefer;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,6 +22,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class Member extends BaseEntity {
 
     @Id
@@ -39,6 +43,11 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(10)")
     private Gender gender;
 
+    private Integer age;
+
+    @Column(nullable = false)
+    private LocalDate birthday;
+
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
@@ -49,9 +58,10 @@ public class Member extends BaseEntity {
 
     private LocalDate inactiveDate;
 
-    @Column(nullable = false, length = 50)
+//    @Column(nullable = false, length = 50)
     private String email;
 
+    @ColumnDefault("0")
     private Integer point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
