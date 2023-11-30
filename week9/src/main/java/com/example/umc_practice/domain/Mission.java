@@ -2,6 +2,7 @@ package com.example.umc_practice.domain;
 
 import com.example.umc_practice.domain.common.BaseEntity;
 import com.example.umc_practice.domain.mapping.MemberMission;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Mission extends BaseEntity {
 
     private Integer reward;
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
     private LocalDateTime deadline;
 
     private String missionSpec;
@@ -32,5 +34,12 @@ public class Mission extends BaseEntity {
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
     private List<MemberMission> memberMissionList = new ArrayList<>();
+
+    public void setStore(Store store) {
+        if(this.store != null)
+            store.getMissionList().remove(this);
+        this.store = store;
+        store.getMissionList().add(this);
+    }
 
 }
