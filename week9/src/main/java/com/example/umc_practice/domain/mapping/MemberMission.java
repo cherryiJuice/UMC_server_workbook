@@ -4,10 +4,7 @@ import com.example.umc_practice.domain.Member;
 import com.example.umc_practice.domain.Mission;
 import com.example.umc_practice.domain.common.BaseEntity;
 import com.example.umc_practice.domain.enums.MissionStatus;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class MemberMission extends BaseEntity {
 
     @Id
@@ -34,4 +32,16 @@ public class MemberMission extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     private Mission mission;
+
+    public void setMember(Member member) {
+        if(this.member != null)
+            member.getMemberMissionList().remove(this);
+        this.member = member;
+        member.getMemberMissionList().add(this);
+    }
+
+    public void setMission(Mission mission) {
+        this.mission = mission;
+        mission.getMemberMissionList().add(this);
+    }
 }
